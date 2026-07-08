@@ -1,0 +1,146 @@
+:root {
+  --primary: #2e7d32;
+  --secondary: #43a047;
+  --accent: #66bb6a;
+  --background: #f5f5f5;
+  --card: #ffffff;
+  --text: #1f2937;
+  --muted: #6b7280;
+  --radius: 15px;
+  --shadow: 0 12px 30px rgba(46, 125, 50, 0.12);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  min-height: 100%;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  background:
+    radial-gradient(circle at top left, rgba(102, 187, 106, 0.12), transparent 30%),
+    radial-gradient(circle at top right, rgba(67, 160, 71, 0.10), transparent 25%),
+    var(--background);
+  color: var(--text);
+}
+
+.app-navbar {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow: 0 8px 24px rgba(46, 125, 50, 0.22);
+}
+
+.hero-card {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
+  border-radius: 22px;
+  padding: 1.5rem;
+  box-shadow: var(--shadow);
+}
+
+.eyebrow {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.app-card {
+  border: 0;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+}
+
+.card, .form-control, .form-select, .btn {
+  border-radius: var(--radius);
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 0.2rem rgba(102, 187, 106, 0.2);
+}
+
+.stats-card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  height: 100%;
+  border-left: 5px solid var(--accent);
+}
+
+.stats-card .value {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--primary);
+}
+
+.stats-card .label {
+  color: var(--muted);
+  font-size: 0.95rem;
+}
+
+.grocery-card {
+  background: #fff;
+  border: 1px solid rgba(46, 125, 50, 0.08);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.05);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.grocery-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 30px rgba(46, 125, 50, 0.12);
+}
+
+.badge-soft {
+  background: rgba(46, 125, 50, 0.12);
+  color: var(--primary);
+}
+
+.category-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(67, 160, 71, 0.1);
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+
+.table thead th {
+  color: var(--muted);
+  font-weight: 700;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.table tbody td {
+  vertical-align: middle;
+}
+
+.empty-state {
+  color: var(--muted);
+}
+
+.mini-card {
+  background: #fff;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1rem;
+  min-height: 100%;
+}
+
+@media (max-width: 767px) {
+  .hero-card {
+    border-radius: 18px;
+  }
+
+  .stats-card .value {
+    font-size: 1.4rem;
+  }
+}
