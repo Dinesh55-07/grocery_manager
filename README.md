@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Grocery List Manager
 
 Frontend-first CRUD demo for a grocery list application.
@@ -31,3 +32,6 @@ Connect the frontend to a Flask REST API backed by local MySQL.
 
 ## Open
 Open `frontend/index.html` in a browser to preview the UI.
+=======
+# sql-project
+>>>>>>> fb058e32f9e33ad57f03d9f808d6b701704c5322
