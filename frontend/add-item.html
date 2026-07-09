@@ -42,8 +42,18 @@
               </div>
               <div class="col-md-6">
                 <label class="form-label">Category *</label>
-                <input id="category" class="form-control form-control-lg" list="categoryList" required />
-                <datalist id="categoryList"></datalist>
+                <select id="category" class="form-select form-select-lg" required>
+                  <option value="" selected disabled>Select a category</option>
+                  <option value="Fruits">Fruits</option>
+                  <option value="Vegetables">Vegetables</option>
+                  <option value="Dairy">Dairy</option>
+                  <option value="Bakery">Bakery</option>
+                  <option value="Grains">Grains</option>
+                  <option value="Snacks">Snacks</option>
+                  <option value="Beverages">Beverages</option>
+                  <option value="Household">Household</option>
+                  <option value="Frozen">Frozen</option>
+                </select>
               </div>
               <div class="col-md-3">
                 <label class="form-label">Price</label>
