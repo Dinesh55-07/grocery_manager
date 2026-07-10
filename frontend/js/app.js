@@ -100,6 +100,20 @@ function buildStats(items) {
   ];
 }
 
+function buildCostSummary(items) {
+  const pendingCost = items
+    .filter((item) => item.status === 'Pending')
+    .reduce((total, item) => total + Number(item.price || 0), 0);
+  const purchasedCost = items
+    .filter((item) => item.status === 'Purchased')
+    .reduce((total, item) => total + Number(item.price || 0), 0);
+
+  return [
+    { label: 'Total Pending Cost', value: money(pendingCost), icon: 'fa-clock', tone: 'warning' },
+    { label: 'Total Purchased Cost', value: money(purchasedCost), icon: 'fa-circle-check', tone: 'success' },
+  ];
+}
+
 function renderStats(items) {
   const statsRow = document.getElementById('statsRow');
   if (!statsRow) return;
@@ -115,6 +129,27 @@ function renderStats(items) {
             </div>
             <div class="value">${stat.value}</div>
             <div class="label">${stat.label}</div>
+          </div>
+        </div>`
+    )
+    .join('');
+}
+
+function renderCostSummary(items) {
+  const costSummaryRow = document.getElementById('costSummaryRow');
+  if (!costSummaryRow) return;
+
+  costSummaryRow.innerHTML = buildCostSummary(items)
+    .map(
+      (summary) => `
+        <div class="col-md-6">
+          <div class="stats-card">
+            <div class="d-flex align-items-center justify-content-between mb-2">
+              <i class="fa-solid ${summary.icon} text-${summary.tone} fs-4"></i>
+              <span class="badge badge-soft">Live</span>
+            </div>
+            <div class="value">${summary.value}</div>
+            <div class="label">${summary.label}</div>
           </div>
         </div>`
     )
@@ -259,6 +294,7 @@ function renderDashboard() {
   const displayModeSelect = document.getElementById('displayModeSelect');
 
   renderStats(state.items);
+  renderCostSummary(state.items);
 
   if (cardViewBtn && tableViewBtn) {
     cardViewBtn.classList.toggle('active', state.viewMode === 'cards');
