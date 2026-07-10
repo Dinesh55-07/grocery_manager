@@ -1,6 +1,7 @@
 import { api } from './api.js';
 
 const VIEW_KEY = 'grocery-view-mode';
+const DISPLAY_KEY = 'grocery-display-mode';
 
 const CATEGORY_ICONS = {
   Fruits: 'fa-apple-whole',
@@ -19,6 +20,7 @@ const state = {
   loading: false,
   error: '',
   viewMode: localStorage.getItem(VIEW_KEY) || 'cards',
+  displayMode: localStorage.getItem(DISPLAY_KEY) || 'combined',
   filters: {
     search: '',
     category: 'all',
@@ -120,8 +122,12 @@ function renderStats(items) {
 }
 
 function createActionButtons(item) {
+  const editButton = item.status === 'Purchased'
+    ? '<button class="btn btn-sm btn-outline-secondary" type="button" disabled title="Purchased items cannot be edited"><i class="fa-solid fa-pen-to-square me-1"></i>Edit</button>'
+    : `<a href="edit-item.html?id=${item.id}" class="btn btn-sm btn-outline-success"><i class="fa-solid fa-pen-to-square me-1"></i>Edit</a>`;
+
   return `
-    <a href="edit-item.html?id=${item.id}" class="btn btn-sm btn-outline-success"><i class="fa-solid fa-pen-to-square me-1"></i>Edit</a>
+    ${editButton}
     <button class="btn btn-sm btn-outline-danger delete-btn" data-id="${item.id}" type="button"><i class="fa-solid fa-trash me-1"></i>Delete</button>
   `;
 }
@@ -156,6 +162,31 @@ function renderCards(items) {
             </div>`
         )
         .join('')}
+    </div>`;
+}
+
+function renderSection(title, items, statusClass) {
+  return `
+    <section class="mb-4">
+      <div class="d-flex align-items-center justify-content-between mb-3">
+        <h3 class="h5 fw-bold mb-0">${title}</h3>
+        <span class="badge ${statusClass}">${items.length} item${items.length === 1 ? '' : 's'}</span>
+      </div>
+      ${items.length === 0
+        ? '<div class="text-muted small py-3">No items in this section.</div>'
+        : (state.viewMode === 'table' ? renderTable(items) : renderCards(items))
+      }
+    </section>`;
+}
+
+function renderSeparatedItems(items) {
+  const pendingItems = items.filter((item) => item.status === 'Pending');
+  const purchasedItems = items.filter((item) => item.status === 'Purchased');
+
+  return `
+    <div class="mb-4">
+      ${renderSection('Pending Items', pendingItems, 'text-bg-warning')}
+      ${renderSection('Purchased Items', purchasedItems, 'text-bg-success')}
     </div>`;
 }
 
@@ -225,12 +256,17 @@ function renderDashboard() {
   const emptyState = document.getElementById('emptyState');
   const cardViewBtn = document.getElementById('cardViewBtn');
   const tableViewBtn = document.getElementById('tableViewBtn');
+  const displayModeSelect = document.getElementById('displayModeSelect');
 
   renderStats(state.items);
 
   if (cardViewBtn && tableViewBtn) {
     cardViewBtn.classList.toggle('active', state.viewMode === 'cards');
     tableViewBtn.classList.toggle('active', state.viewMode === 'table');
+  }
+
+  if (displayModeSelect) {
+    displayModeSelect.value = state.displayMode;
   }
 
   if (loadingState) {
@@ -262,7 +298,9 @@ function renderDashboard() {
   }
 
   emptyState?.classList.add('d-none');
-  itemsContainer.innerHTML = state.viewMode === 'table' ? renderTable(filteredItems) : renderCards(filteredItems);
+  itemsContainer.innerHTML = state.displayMode === 'separate'
+    ? renderSeparatedItems(filteredItems)
+    : (state.viewMode === 'table' ? renderTable(filteredItems) : renderCards(filteredItems));
 }
 
 function syncCategoryOptions() {
@@ -319,6 +357,12 @@ function setViewMode(mode) {
   renderDashboard();
 }
 
+function setDisplayMode(mode) {
+  state.displayMode = mode;
+  localStorage.setItem(DISPLAY_KEY, mode);
+  renderDashboard();
+}
+
 function setupDashboard() {
   const searchInput = document.getElementById('searchInput');
   const categoryFilter = document.getElementById('categoryFilter');
@@ -328,6 +372,7 @@ function setupDashboard() {
   const itemsContainer = document.getElementById('itemsContainer');
   const cardViewBtn = document.getElementById('cardViewBtn');
   const tableViewBtn = document.getElementById('tableViewBtn');
+  const displayModeSelect = document.getElementById('displayModeSelect');
   const exportBtn = document.getElementById('exportBtn');
   const printBtn = document.getElementById('printBtn');
 
@@ -354,6 +399,10 @@ function setupDashboard() {
   sortSelect?.addEventListener('change', (event) => {
     state.filters.sort = event.target.value;
     renderDashboard();
+  });
+
+  displayModeSelect?.addEventListener('change', (event) => {
+    setDisplayMode(event.target.value);
   });
 
   cardViewBtn?.addEventListener('click', () => setViewMode('cards'));
